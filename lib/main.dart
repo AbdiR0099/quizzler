@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quizzler/questions.dart';
 
 void main() => runApp(Quizzler());
 
@@ -22,13 +23,27 @@ class Quizzler extends StatelessWidget {
 }
 
 class QuizPage extends StatefulWidget {
-  const QuizPage({Key? key}) : super(key: key);
-
   @override
   State<QuizPage> createState() => _QuizPageState();
 }
 
 class _QuizPageState extends State<QuizPage> {
+  List<Icon> scoreKeeper = [];
+  // List<String> questions = [
+  //   'A slug\'s blood is green.',
+  //   'Approximately one quarter of human bones are in the feet.',
+  //   'You can lead a cow down stairs but not up stairs.',
+  // ];
+  // List<bool> answer = [true, true, false];
+  List<Questions> question = [
+    Questions(q: 'A slug\'s blood is green.', a: true),
+    Questions(
+        q: 'Approximately one quarter of human bones are in the feet.',
+        a: true),
+    Questions(q: 'You can lead a cow down stairs but not up stairs.', a: false),
+  ];
+
+  int questionNumber = 0;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -41,7 +56,7 @@ class _QuizPageState extends State<QuizPage> {
             padding: EdgeInsets.all(10),
             child: Center(
               child: Text(
-                'QUESTION',
+                questions[questionNumber],
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 25, color: Colors.white),
               ),
@@ -50,10 +65,25 @@ class _QuizPageState extends State<QuizPage> {
         ),
         Expanded(
           child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 30, horizontal: 0),
+            padding: EdgeInsets.only(bottom: 20),
             child: MaterialButton(
               color: Colors.green,
-              onPressed: () {},
+              onPressed: () {
+                bool correctAns = answer[questionNumber];
+                if (correctAns == true) {
+                  // Icon(Icons.check);
+                  print('user got it right');
+                } else {
+                  // Icon(Icons.close);
+                  print('user got it wrong');
+                }
+                setState(() {
+                  questionNumber++;
+                  if (questionNumber > 2) {
+                    questionNumber = 0;
+                  }
+                });
+              },
               child: Text(
                 'TRUE',
                 textAlign: TextAlign.center,
@@ -64,10 +94,25 @@ class _QuizPageState extends State<QuizPage> {
         ),
         Expanded(
           child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 30, horizontal: 0),
+            padding: EdgeInsets.only(bottom: 20),
             child: MaterialButton(
               color: Colors.red,
-              onPressed: () {},
+              onPressed: () {
+                bool correctAns = answer[questionNumber];
+                if (correctAns == false) {
+                  // Icon(Icons.check);
+                  print('user got it right');
+                } else {
+                  // Icon(Icons.close);
+                  print('user got it wrong');
+                }
+                setState(() {
+                  questionNumber++;
+                  if (questionNumber > 2) {
+                    questionNumber = 0;
+                  }
+                });
+              },
               child: Text(
                 'FALSE',
                 textAlign: TextAlign.center,
@@ -76,7 +121,13 @@ class _QuizPageState extends State<QuizPage> {
             ),
           ),
         ),
-        SizedBox(height: 30),
+        Expanded(
+          flex: 1,
+          child: Container(),
+        ),
+        // Row(
+        //   children:
+        // ),
       ],
     );
   }
