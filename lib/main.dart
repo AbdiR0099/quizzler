@@ -35,7 +35,7 @@ class _QuizPageState extends State<QuizPage> {
   //   'You can lead a cow down stairs but not up stairs.',
   // ];
   // List<bool> answer = [true, true, false];
-  List<Questions> question = [
+  List<Questions> questionBank = [
     Questions(q: 'A slug\'s blood is green.', a: true),
     Questions(
         q: 'Approximately one quarter of human bones are in the feet.',
@@ -56,7 +56,7 @@ class _QuizPageState extends State<QuizPage> {
             padding: EdgeInsets.all(10),
             child: Center(
               child: Text(
-                questions[questionNumber],
+                questionBank[questionNumber].questionText,
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 25, color: Colors.white),
               ),
@@ -69,7 +69,7 @@ class _QuizPageState extends State<QuizPage> {
             child: MaterialButton(
               color: Colors.green,
               onPressed: () {
-                bool correctAns = answer[questionNumber];
+                bool correctAns = questionBank[questionNumber].questionAns;
                 if (correctAns == true) {
                   // Icon(Icons.check);
                   print('user got it right');
@@ -98,7 +98,7 @@ class _QuizPageState extends State<QuizPage> {
             child: MaterialButton(
               color: Colors.red,
               onPressed: () {
-                bool correctAns = answer[questionNumber];
+                bool correctAns = questionBank[questionNumber].questionAns;
                 if (correctAns == false) {
                   // Icon(Icons.check);
                   print('user got it right');
