@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:quizzler/questions.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
+
+import 'quiz_Brain.dart';
 
 void main() => runApp(Quizzler());
 
@@ -35,15 +37,49 @@ class _QuizPageState extends State<QuizPage> {
   //   'You can lead a cow down stairs but not up stairs.',
   // ];
   // List<bool> answer = [true, true, false];
-  List<Questions> questionBank = [
-    Questions(q: 'A slug\'s blood is green.', a: true),
-    Questions(
-        q: 'Approximately one quarter of human bones are in the feet.',
-        a: true),
-    Questions(q: 'You can lead a cow down stairs but not up stairs.', a: false),
-  ];
+  Quiz_Brain quiz_brain = Quiz_Brain();
+  void checkAnswer(bool userpickAnswer) {
+    bool correctAns = quiz_brain.getAnswer();
+    setState(() {
+      if (quiz_brain.isFinished()) {
+        quiz_brain.reset();
+        Alert(
+          context: context,
+          type: AlertType.error,
+          title: "QUIZ ENDED",
+          desc: "Take Quiz Again",
+          buttons: [
+            DialogButton(
+              child: Text(
+                "Quiz End",
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              ),
+              onPressed: () => Navigator.pop(context),
+              width: 120,
+            )
+          ],
+        ).show();
+        scoreKeeper = [];
+      } else {
+        if (correctAns == userpickAnswer) {
+          // Icon(Icons.check);
+          scoreKeeper.add(Icon(
+            Icons.check,
+            color: Colors.green,
+          ));
+          print('user got it right');
+        } else {
+          scoreKeeper.add(Icon(
+            Icons.close,
+            color: Colors.red,
+          ));
+          print('user got it wrong');
+        }
+        quiz_brain.nextQuestion();
+      }
+    });
+  }
 
-  int questionNumber = 0;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -56,7 +92,7 @@ class _QuizPageState extends State<QuizPage> {
             padding: EdgeInsets.all(10),
             child: Center(
               child: Text(
-                questionBank[questionNumber].questionText,
+                quiz_brain.getQuestionText(),
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 25, color: Colors.white),
               ),
@@ -69,20 +105,7 @@ class _QuizPageState extends State<QuizPage> {
             child: MaterialButton(
               color: Colors.green,
               onPressed: () {
-                bool correctAns = questionBank[questionNumber].questionAns;
-                if (correctAns == true) {
-                  // Icon(Icons.check);
-                  print('user got it right');
-                } else {
-                  // Icon(Icons.close);
-                  print('user got it wrong');
-                }
-                setState(() {
-                  questionNumber++;
-                  if (questionNumber > 2) {
-                    questionNumber = 0;
-                  }
-                });
+                checkAnswer(true);
               },
               child: Text(
                 'TRUE',
@@ -98,20 +121,7 @@ class _QuizPageState extends State<QuizPage> {
             child: MaterialButton(
               color: Colors.red,
               onPressed: () {
-                bool correctAns = questionBank[questionNumber].questionAns;
-                if (correctAns == false) {
-                  // Icon(Icons.check);
-                  print('user got it right');
-                } else {
-                  // Icon(Icons.close);
-                  print('user got it wrong');
-                }
-                setState(() {
-                  questionNumber++;
-                  if (questionNumber > 2) {
-                    questionNumber = 0;
-                  }
-                });
+                checkAnswer(false);
               },
               child: Text(
                 'FALSE',
@@ -125,9 +135,9 @@ class _QuizPageState extends State<QuizPage> {
           flex: 1,
           child: Container(),
         ),
-        // Row(
-        //   children:
-        // ),
+        Row(
+          children: scoreKeeper,
+        ),
       ],
     );
   }
